@@ -20,7 +20,6 @@
 default['haproxy']['incoming_address'] = "0.0.0.0"
 default['haproxy']['incoming_port'] = 80
 default['haproxy']['member_port'] = 8080
-default['haproxy']['enable_admin'] = true
 default['haproxy']['app_server_role'] = "webserver"
 default['haproxy']['balance_algorithm'] = "roundrobin"
 default['haproxy']['enable_ssl'] = false
@@ -39,3 +38,7 @@ default['haproxy']['group'] = "haproxy"
 
 default['haproxy']['global_max_connections'] = 4096
 default['haproxy']['member_max_connections'] = 100
+
+default['haproxy']['enable_admin'] = true
+default['haproxy']['admin']['address_bind'] = "127.0.0.1"
+default['haproxy']['admin']['port'] = 22002
