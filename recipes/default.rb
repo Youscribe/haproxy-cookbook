@@ -21,22 +21,23 @@ package "haproxy" do
   action :install
 end
 
-template "/etc/default/haproxy" do
-  source "haproxy-default.erb"
+cookbook_file "/etc/default/haproxy" do
+  source "haproxy-default"
   owner "root"
   group "root"
-  mode 0644
-end
-
-service "haproxy" do
-  supports :restart => true, :status => true, :reload => true
-  action [:enable, :start]
+  mode 00644
+  notifies :restart, "service[haproxy]"
 end
 
 template "/etc/haproxy/haproxy.cfg" do
   source "haproxy.cfg.erb"
   owner "root"
   group "root"
-  mode 0644
+  mode 00644
   notifies :restart, "service[haproxy]"
+end
+
+service "haproxy" do
+  supports :restart => true, :status => true, :reload => true
+  action [:enable, :start]
 end
