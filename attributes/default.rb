@@ -26,6 +26,7 @@ default['haproxy']['enable_ssl'] = false
 default['haproxy']['ssl_incoming_address'] = "0.0.0.0"
 default['haproxy']['ssl_incoming_port'] = 443
 default['haproxy']['ssl_member_port'] = 8443
+default['haproxy']['use_cookie'] = false
 
 default['haproxy']['defaults_options'] = ["httplog", "dontlognull", "redispatch"]
 default['haproxy']['x_forwarded_for'] = false
