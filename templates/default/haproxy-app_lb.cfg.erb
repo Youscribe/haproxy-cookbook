@@ -36,8 +36,11 @@ frontend https
 <% end -%>
 
 backend servers-http
+  <% if node['haproxy']['use_cookie'] -%>
+  cookie SERVERID insert indirect nocache
+  <% end -%>
   <% @pool_members.each do |member| -%>
-  server <%= member[:hostname] %> <%= member[:ipaddress] %>:<%= node['haproxy']['member_port'] %> weight 1 maxconn <%= node['haproxy']['member_max_connections'] %> check
+  server <%= member[:hostname] %> <%= member[:ipaddress] %>:<%= node['haproxy']['member_port'] %> weight 1 maxconn <%= node['haproxy']['member_max_connections'] %> check <% if node['haproxy']['use_cookie'] -%>cookie <%= member[:hostname] %><% end -%>
   <% end -%>
 
 <% if node['haproxy']['enable_ssl'] -%>
