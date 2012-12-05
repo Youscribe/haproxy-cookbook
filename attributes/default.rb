@@ -27,6 +27,12 @@ default['haproxy']['ssl_incoming_address'] = "0.0.0.0"
 default['haproxy']['ssl_incoming_port'] = 443
 default['haproxy']['ssl_member_port'] = 8443
 default['haproxy']['use_cookie'] = false
+default['haproxy']['httpchk'] = nil
+default['haproxy']['ssl_httpchk'] = nil
+default['haproxy']['enable_admin'] = true
+default['haproxy']['admin']['address_bind'] = "127.0.0.1"
+default['haproxy']['admin']['port'] = 22002
+default['haproxy']['pid_file'] = "/var/run/haproxy.pid"
 
 default['haproxy']['defaults_options'] = ["httplog", "dontlognull", "redispatch"]
 default['haproxy']['x_forwarded_for'] = false
@@ -41,9 +47,3 @@ default['haproxy']['global_max_connections'] = 4096
 default['haproxy']['member_max_connections'] = 100
 default['haproxy']['frontend_max_connections'] = 2000
 default['haproxy']['frontend_ssl_max_connections'] = 2000
-
-default['haproxy']['enable_admin'] = true
-default['haproxy']['admin']['address_bind'] = "127.0.0.1"
-default['haproxy']['admin']['port'] = 22002
-
-default['haproxy']['pid_file'] = "/var/run/haproxy.pid"
