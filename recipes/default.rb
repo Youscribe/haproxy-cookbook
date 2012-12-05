@@ -34,6 +34,11 @@ template "/etc/haproxy/haproxy.cfg" do
   owner "root"
   group "root"
   mode 00644
+  variables(
+    :instances => node['haproxy']['instances'],
+    :defaults_options => defaults_options,
+    :defaults_timeouts => defaults_timeouts
+  )
   notifies :reload, "service[haproxy]"
 end
 

@@ -2,34 +2,60 @@ global
   log 127.0.0.1   local0
   log 127.0.0.1   local1 notice
   #log loghost    local0 info
-  maxconn 4096
+  maxconn <%= node['haproxy']['global_max_connections'] %>
   #debug
   #quiet
-  user haproxy
-  group haproxy
+  user <%= node['haproxy']['user'] %>
+  group <%= node['haproxy']['group'] %>
 
 defaults
   log     global
   mode    http
-  option  httplog
-  option  dontlognull
   retries 3
-  option redispatch
-  timeout connect 5s
-  timeout client 50s
-  timeout server 50s
+  <% @defaults_timeouts.sort.map do | value, time | -%>
+  timeout <%= value %> <%= time %>
+  <% end -%>
+  <% @defaults_options.sort.each do | option | -%>
+  option <%= option %>
+  <% end -%>
   balance  <%= node['haproxy']['balance_algorithm'] %>
 
 # Set up application listeners here.
 
-frontend http
-  maxconn 4000
-  bind 0.0.0.0:<%= node['haproxy']['incoming_port'] %>
-  default_backend servers-http
+<% @instances.each_pair do |name, instance| -%>
+<%
+  #set default values
+  instance['frontend_options'] ||= {}
+-%>
+frontend <%= name %>
+  maxconn <%= instance['maxconn'] %>
+  <% if instance['mode'] -%>
+  mode <%= instance['mode'] %>
+  <% end -%>
+  bind <%= instance['incoming_address'] %>:<%= instance['incoming_port'] %>
+  <% instance['frontend_options'].sort.each do | option | -%>
+  option <%= option %>
+  <% end -%>
+  default_backend <%= name %>
 
-backend servers-http
-  server localhost 127.0.0.1:4000 weight 1 maxconn <%= node['haproxy']['member_max_connections'] %> check
-  server localhost 127.0.0.1:4001 weight 1 maxconn <%= node['haproxy']['member_max_connections'] %> check
+backend <%= name %>
+  <% if instance['mode'] -%>
+  mode <%= instance['mode'] %>
+  <% end -%>
+  <% instance['backend_options'].sort.map do | variable, value | -%>
+  <%= variable %> <%= option %>
+  <% end -%>
+  <% instance['servers'].each_pair do | name , server| -%>
+  <%
+    server['weight'] ||= 1
+    server['options'] ||= [ "check" ]
+    server['address'] ||= name
+    server['port'] ||= 80
+  %>
+  server <%= name %> <% server['address'] %>:<% server['port'] %> weight <%= server['weight'] %> <% server['options'].sort.each do | option | %> <%= option %><% end %>
+  <% end -%>
+
+<% end %>
 
 <% if node['haproxy']['enable_admin'] -%>
 listen admin <%= node['haproxy']['admin']['address_bind'] %>:<%= node['haproxy']['admin']['port'] %>
