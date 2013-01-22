@@ -24,3 +24,19 @@ cpu_affinity "set affinity for haproxy" do
   cpu 0
   subscribes :set, resources("service[haproxy]"), :immediately
 end
+
+sysctl_multi "haproxy" do
+  instructions ({
+    "net.ipv4.tcp_tw_reuse" => "1",
+    "net.ipv4.ip_local_port_range" => "1024 65023",
+    "net.ipv4.tcp_timestamps" => "0",
+    "net.core.rmem_max" => "16777216",
+    "net.core.wmem_max" => "16777216",
+    "net.ipv4.tcp_rmem" => "4096 87380 16777216",
+    "net.ipv4.tcp_wmem" => "4096 87380 16777216",
+    "net.core.netdev_max_backlog" => "15000",
+    "net.ipv4.tcp_max_tw_buckets" => "16777216",
+    "net.core.somaxconn" => "262144",
+    "net.ipv4.tcp_max_syn_backlog" => "262144"
+  })
+end
