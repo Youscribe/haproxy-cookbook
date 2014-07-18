@@ -36,6 +36,7 @@ frontend https
 <% end -%>
 
 backend servers-http
+<<<<<<< HEAD
 <% if node['haproxy']['cookie'] -%>
   cookie <%= node['haproxy']['cookie'] %> insert indirect nocache
 <% end -%>
@@ -43,6 +44,18 @@ backend servers-http
   server <%= member[:hostname] %> <%= member[:ipaddress] %>:<%= node['haproxy']['member_port'] %> weight 1 maxconn <%= node['haproxy']['member_max_connections'] %> check <% if node['haproxy']['cookie'] %>cookie <%= member[:hostname] %><% end %>
 <% end -%>
 <% if node["haproxy"]["httpchk"] -%>
+=======
+  <% if node['haproxy']['use_cookie'] -%>
+  cookie SERVERID insert indirect nocache
+  <% end -%>
+  <% @pool_members.each do |member| -%>
+  server <%= member[:hostname] %> <%= member[:ipaddress] %>:<%= node['haproxy']['member_port'] %> weight 1 maxconn <%= node['haproxy']['member_max_connections'] %> check <% if node['haproxy']['use_cookie'] %>cookie <%= member[:hostname] %><% end %>
+  <% end -%>
+  <% if node["haproxy"]["httpchk"] -%>
+  option httpchk <%= node["haproxy"]["httpchk"] %>
+  <% end -%>
+  <% if node["haproxy"]["httpchk"] -%>
+>>>>>>> e04417018d0d07401b675e0a986fe3ecf254e661
   option httpchk <%= node["haproxy"]["httpchk"] %>
 <% end -%>
 
@@ -62,4 +75,8 @@ backend servers-https
 listen admin <%= node['haproxy']['admin']['address_bind'] %>:<%= node['haproxy']['admin']['port'] %>
   mode http
   stats uri /
+<% end -%>
+
+<% node['haproxy']['raw_config'].each do |value|  -%>
+<%= value %>
 <% end -%>
