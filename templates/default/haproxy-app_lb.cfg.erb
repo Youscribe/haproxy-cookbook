@@ -66,3 +66,7 @@ listen admin <%= node['haproxy']['admin']['address_bind'] %>:<%= node['haproxy']
   mode http
   stats uri /
 <% end -%>
+
+<% node['haproxy']['raw_config'].each do |value|  -%>
+<%= value %>
+<% end -%>
