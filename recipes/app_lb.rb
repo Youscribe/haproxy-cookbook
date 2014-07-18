@@ -33,7 +33,7 @@ pool_members.map! do |member|
       else
         member['cloud']['public_ipv4']
       end
-    elsif node['haproxy']['member_interface'] and member["network"]["interfaces"].has_key?(node['haproxy']['member_interface'])
+    elsif node['haproxy']['member_interface'] and member["network"]["interfaces"] and member["network"]["interfaces"].has_key?(node['haproxy']['member_interface'])
       member["network"]["interfaces"][node['haproxy']['member_interface']]["addresses"].select { |address, data| data["family"] == "inet" }[0][0]
     else
       member['ipaddress']
