@@ -19,6 +19,9 @@ defaults
   option <%= option %>
 <% end -%>
   balance  <%= node['haproxy']['balance_algorithm'] %>
+<% node['haproxy']['raw_config'].each do |value|  -%>
+  <%= value %>
+<% end -%>
 
 # Set up application listeners here.
 
@@ -57,8 +60,4 @@ backend servers-https
 listen admin <%= node['haproxy']['admin']['address_bind'] %>:<%= node['haproxy']['admin']['port'] %>
   mode http
   stats uri /
-<% end -%>
-
-<% node['haproxy']['raw_config'].each do |value|  -%>
-<%= value %>
 <% end -%>
