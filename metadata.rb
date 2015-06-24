@@ -15,4 +15,4 @@ end
 
 depends           "cpu", ">= 0.2.0"
 depends           "build-essential"
-depends           "sysctl"
+depends           "sysctl", "~> 0.1.7"
