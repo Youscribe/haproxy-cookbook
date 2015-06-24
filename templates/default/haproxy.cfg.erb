@@ -7,7 +7,7 @@ global
   #quiet
   user <%= node['haproxy']['user'] %>
   group <%= node['haproxy']['group'] %>
-  stats socket /var/run/info.sock mode 666 level user
+  stats socket /var/run/haproxy/info.sock mode 666 level user
   stats timeout 2m
 
 defaults
